@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Tutorial</title>
+</head>
+<body>
+    <aside>
+        <nav id="navigation">
+            <div class="title">
+                <h2>Navigation</h2>
+            </div>
+            <span class="line"></span>
+            <ul>
+            </ul>
+        </nav>
+    </aside>
+    
+    <main>
+        <header>
+            <h1>How to make an interactive web chat system using</h1><img src="assets/django-logo.png" alt="">
+        </header>
+        <div class="time-estimated">
+            <p><b>Time estimated</b>: 1h 15min</p>
+            <p><b>Operating System used</b>: Ubuntu (Linux)</p>
+        </div>
+        <div class="steps">
+            <div class="step" id="prerequisites">
+                <h2>Prerequisites</h2>
+                <div class="description">
+                    <p>For this tutorial, there is needed to have Python 3.11 installed.</p>
+                    <p>To install Python, refer to the official <a href="https://www.python.org/downloads/" target="_blank">Python</a> website and select the installation for your Operating Service.</p>
+                </div>
+            </div>
+            <span class="line"></span>
+            <div class="step" id="venv-setup">
+                <h2>Venv setup</h2>
+                <div class="description">
+                    <p>A venv is a virtual environment that allows you to install package inside a folder in your project, instead of installing it on your machine.</p>
+                    <p>To install the venv package, execute this one (only for Ubuntu):</p>
+                    <p class="command">$ apt get install python3.11-venv</p>
+                    <p>To setup the venv, you’ll need to execute this command:</p>
+                    <p class="command">$ python -m venv venv</p>
+                    <p>Finally, get into the venv</p>
+                    <p class="command">$ source venv/bin/activate</p>
+                </div>
+            </div>
+            <span class="line"></span>
+            <div class="step" id="packages-installation">
+                <h2>Packages installation</h2>
+                <div class="description">
+                    <p>To install the required packages, execute these commands:</p>
+                    <p class="command">$ pip install django</p>
+                    <p class="command">$ pip install daphne</p>
+                    <p class="command">$ pip install channels</p>
+                    <p>Django is a Python framework where you can easily do advanced concepts, and Daphne a package designed for Django to implement Web Sockets.</p>
+                </div>
+            </div>
+            <span class="line"></span>
+            <div class="step" id="project-setup">
+                <h2>Project setup</h2>
+                <div class="description">
+                    <p>We will need to work in a Django project. To create one, simply type the following command:</p>
+                    <p class="command">$ django-admin startproject chat</p>
+                    <p>In the few next following steps, we will only work inside the folder created (chat).</p>
+                    <p class="next-paragraph">Next, Inside the <i>settings.py</i> file, add 'daphne' in the INSTALLED_APPS property, like so:</p>
+                    <div class="codeheader">
+                        <p>chat/chat/settings.py</p>
+                    </div>
+                    <div class="code">
+                        <p>INSTALLED_APPS = [</p>
+                        <p>&emsp;'django.contrib.admin',</p>
+                        <p>&emsp;'django.contrib.auth',</p>
+                        <p>&emsp;'django.contrib.contenttypes',</p>
+                        <p>&emsp;'django.contrib.sessions',</p>
+                        <p>&emsp;'django.contrib.messages',</p>
+                        <p>&emsp;'daphne',</p>
+                        <p>&emsp;'django.contrib.staticfiles',</p>
+                        <p>]</p>
+                    </div>
+                    <p>Also, in the same file, add this line:</p>
+                    <div class="codeheader">
+                        <p>chat/chat/settings.py</p>
+                    </div>
+                    <div class="code">
+                        <p>ASGI_APPLICATION = "chat.asgi.application"</p>
+                    </div>
+                    <p>Finally, create a new app, we will work in this app in the next few steps.</p>
+                    <p class="command">$ django startapp chat_app</p>
+                </div>
+            </div>
+            <span class="line"></span>
+            <div class="step" id="template-creation">
+                <h2>Template creation</h2>
+                <div class="description">
+                    <p>Create a templates folder inside the chat_app folder, and a chat_app folder inside the templates folder just created.</p>
+                    <p>Create a lobby.html file inside the chat_app folder created earlier (the one inside the templates folder).</p>
+                    <p>And paste the following code inside.</p>
+                    <div class="codeheader">
+                        <p>chat/chat_app/templates/chat_app/lobby.html</p>
+                    </div>
+                    <div class="code">
+                        <p>&lt;!DOCTYPE html>;</p>
+                        <p>&lt;html lang="en"></p>
+                        <p>&lt;head></p>
+                        <p>&emsp;&lt;meta charset="UTF-8"></p>
+                        <p>&emsp;&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"></p>
+                        <p>&emsp;&lt;title>Lobby&lt;/title></p>
+                        <p>&lt;/head></p>
+                        <p>&lt;body></p>
+                        <p>&emsp;&lt;h1>Let's chat&lt;/h1></p>
+                        <p>&lt;/body></p>
+                        <p>&lt;/html></p>
+                    </div>
+                    <p>This page is the page that will allow us to communicate using web sockets.</p>
+                </div>
+            </div>
+            <span class="line"></span>
+            <div class="step" id="render-page">
+                <h2>Render the page</h2>
+                <div class="description">
+                    <p>To render this page, you’ll need to create a lobby function that renders the html page in the <i>views.py</i> file in the chat_app folder:</p>
+                    <div class="codeheader">
+                        <p>chat/chat_app/views.py</p>
+                    </div>
+                    <div class="code">
+                        <p>from django.shortcuts import render</p>
+                        <p>def lobby(request):</p>
+                        <p>&emsp;</p>
+                        <p>&emsp;return render(request, 'chat/lobby.html')</p>
+                    </div>
+                    <p>Next, in the <i>urls.py</i> file you need to link the url path, to the lobby method:</p>
+                    <div class="codeheader">
+                        <p>chat/chat_app/urls.py</p>
+                    </div>
+                    <div class="code">
+                        <p>from django.urls import path</p>
+                        <p>from . import views</p>
+                        <p>&emsp;</p>
+                        <p>urlpatterns = [</p>
+                        <p>&emsp;path('', views.lobby)</p>
+                        <p>]</p>
+                    </div>
+                    <p>Also, in the </i>urls.py</i> file in the chat folder, you must include the urls from the <i>urls.py</i> file in the app.</p>
+                    <div class="codeheader">
+                        <p>chat/chat/urls.py</p>
+                    </div>
+                    <div class="code">
+                        <p>from django.contrib import admin</p>
+                        <p>from django.urls import path, include</p>
+                        <p>&emsp;</p>
+                        <p>urlpatterns = [</p>
+                        <p>&emsp;path('admin/', admin.site.urls),</p>
+                        <p>&emsp;path('', include('chat.urls'))</p>
+                        <p>]</p>
+                    </div>
+                    <p>Finally, in the <i>settings.py</i> file, add the TEMPLATES property:</p>
+                    <div class="codeheader">
+                        <p>chat/chat/settings.py</p>
+                    </div>
+                    <div class="code">
+                        <p>TEMPLATES = [</p>
+                        <p>&emsp;{</p>
+                        <p>&emsp;&emsp;'BACKEND': 'django.template.backends.django.DjangoTemplates',</p>
+                        <p>&emsp;&emsp;'DIRS': [os.path.join(BASE_DIR, 'chat_app/templates')],</p>
+                        <p>&emsp;&emsp;'APP_DIRS': True,</p>
+                        <p>&emsp;&emsp;'OPTIONS': {</p>
+                        <p>&emsp;&emsp;&emsp;'context_processors': [</p>
+                        <p>&emsp;&emsp;&emsp;&emsp;'django.template.context_processors.debug',</p>
+                        <p>&emsp;&emsp;&emsp;&emsp;'django.template.context_processors.request',</p>
+                        <p>&emsp;&emsp;&emsp;&emsp;'django.contrib.auth.context_processors.auth',</p>
+                        <p>&emsp;&emsp;&emsp;&emsp;'django.contrib.messages.context_processors.messages'</p>,
+                        <p>&emsp;&emsp;&emsp;],</p>
+                        <p>&emsp;&emsp;},</p>
+                        <p>&emsp;},</p>
+                        <p>]</p>
+                    </div>
+                </div>                
+            </div>
+            <span class="line"></span>
+            <div class="step" id="start-server">
+                <h2>Start the server</h2>
+                <div class="description">
+                    <p>To start the server, first migrate the modifications like so:</p>
+                    <p class="command">$ python manage.py migrate</p>
+                    <p>Then, start the server:</p>
+                    <p class="command">$ python manage.py runserver</p>
+                    <p>You can now connect to given link in the output of the last command</p>
+                </div>
+            </div>
+            <span class="line"></span>
+            <div class="step" id="websocket-connection">
+                <h2>Establish the Websocket connection</h2>
+                <div class="description">
+                    <p>To establish the websocket connection, you must add a script tag in the HTML at the bottom of the body:</p>
+                    <div class="codeheader">
+                        <p>chat/chat_app/templates/chat_app/lobby.html</p>
+                    </div>
+                    <div class="code">
+                        <p>&lt;body></p>
+                        <p>&emsp;…</p>
+                        <p>&emsp;&lt;script type="text/javascript"></p>
+                        <p>&emsp;&emsp;let url = `ws://${window.location.host}/ws/socket-server/`;</p>
+                        <p>&emsp;&emsp;</p>
+                        <p>&emsp;&emsp;const chatSocket = new WebSocket(url);</p>
+                        <p>&emsp;&emsp;</p>
+                        <p>&emsp;&emsp;chatSocket.onmessage = (event) => {</p>
+                        <p>&emsp;&emsp;let data = JSON.parse(event.data);</p>
+                        <p>&emsp;&emsp;console.log("Data: ", data)</p>
+                        <p>&emsp;&emsp;}</p>
+                        <p>&emsp;&lt;/script></p>
+                        <p>&lt;/body></p>
+                    </div>
+                </div>
+            </div>
+            <span class="line"></span>
+            <div class="step" id="handle-connection">
+                <h2>Handle the connection</h2>
+                <div class="description">
+                    <p>Create a <i>consumers.py</i> file in your chat_app folder and paste this code:</p>
+                    <div class="codeheader">
+                        <p>chat/chat_app/consumers.py</p>
+                    </div>
+                    <div class="code">
+                        <p>import json</p>
+                        <p>from channels.generic.websocket import WebsocketConsumer</p>
+                        <p>&emsp;</p>
+                        <p>class ChatConsumer(WebsocketConsumer):</p>
+                        <p>&emsp;def connect(self):</p>
+                        <p>&emsp;&emsp;self.accept()</p>
+                        <p>&emsp;&emsp;self.send(text_data=json.dumps({</p>
+                        <p>&emsp;&emsp;'type': 'connection_established',</p>
+                        <p>&emsp;&emsp;'message': 'Connected'</p>
+                        <p>&emsp;&emsp;}))</p>
+                    </div>
+                    <p>This code allows you to send a message to the client connected.</p>
+                </div>
+            </div>
+            <span class="line"></span>
+            <div class="step" id="link-connection">
+                <h2>Link the connection</h2>
+                <div class="description">
+                    <p>Create a <i>routing.py</i> file in your chat_app folder</p>
+                    <div class="codeheader">
+                        <p>chat/chat_app/routing.py</p>
+                    </div>
+                    <div class="code">
+                        <p>from django.urls import re_path</p>
+                        <p>from . import consumers</p>
+                        <p>&emsp;</p>
+                        <p>websocket_urlpatterns = [</p>
+                        <p>&emsp;re_path(r'ws/socket-server/', consumers.ChatConsumer.as_asgi())</p>
+                        <p>]</p>
+                    </div>
+                    <p>Finally, in the <i>asgi.py</i> file in the chat folder:</p>
+                    <div class="codeheader">
+                        <p>chat/chat/asgi.py</p>
+                    </div>
+                    <div class="code">
+                        <p>import os</p>
+                        <p>from django.core.asgi import get_asgi_application</p>
+                        <p>from channels.routing import ProtocolTypeRouter, URLRouter</p>
+                        <p>from channels.auth import AuthMiddlewareStack</p>
+                        <p>import chat_app.routing</p>
+                        <p>&emsp;</p>
+                        <p>os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'chat.settings')</p>
+                        <p>application = ProtocolTypeRouter({</p>
+                        <p>&emsp;'http': get_asgi_application(),</p>
+                        <p>&emsp;'websocket': AuthMiddlewareStack(</p>
+                        <p>&emsp;&emsp;URLRouter(</p>
+                        <p>&emsp;&emsp;&emsp;chat_app.routing.websocket_urlpatterns</p>
+                        <p>&emsp;&emsp;)</p>
+                        <p>&emsp;)</p>
+                        <p>})</p>
+                    </div>
+                    <p>Using this, you will be able to connect to the websocket server when you load the page.</p>
+                    <p>Just <a href="#start-server">run</a> the server, and connect to the URL given by the command.</p>
+                    <p>Now, if you look at the console, you will see that the server responded like so :</p>
+                    <div class="image">
+                        <img src="assets/websocket-connection.png" alt="websocket">
+                    </div>
+                </div>
+            </div>
+            <span class="line"></span>
+            <div class="step" id="add-the-chat-system">
+                <h2>Add the chat system</h2>
+                <div class="description">
+                    <p>To add the chat system, you'll need to change the HTML template to add an input, and manage to receive messages sent by other users.</p>
+                    <div class="codeheader">
+                        <p>chat/chat_app/templates/chat_app/lobby.html</p>
+                    </div>
+                    <div class="code">
+                        <p>&lt;!DOCTYPE html&gt;</p>
+                        <p>&emsp;&lt;html lang="en"&gt;</p>
+                        <p>&emsp;&emsp;&lt;head&gt;</p>
+                        <p>&emsp;&emsp;&emsp;&lt;meta charset="UTF-8"&gt;</p>
+                        <p>&emsp;&emsp;&emsp;&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</p>
+                        <p>&emsp;&emsp;&emsp;&lt;title&gt;Lobby&lt;/title&gt;</p>
+                        <p>&emsp;&emsp;&lt;/head&gt;</p>
+                        <p>&emsp;&emsp;&lt;body&gt;</p>
+                        <p>&emsp;&emsp;&emsp;&lt;h1&gt;Let's chat&lt;/h1&gt;&lt;br&gt;</p>
+                        <p>&emsp;&emsp;&emsp;&lt;form id="form" onsubmit="handleSubmit(event)"&gt;</p>
+                        <p>&emsp;&emsp;&emsp;&emsp;&lt;input id="chat-input" type="text"&gt;</p>
+                        <p>&emsp;&emsp;&emsp;&emsp;&lt;input type="submit"&gt;</p>
+                        <p>&emsp;&emsp;&emsp;&lt;/form&gt;</p>
+                        <p>&emsp;&emsp;&emsp;&lt;main id="messages"&gt;</p>
+                        <p>&emsp;&emsp;&emsp;&lt;/main&gt;</p>
+                        <p>&emsp;&emsp;&emsp;&lt;script type="text/javascript"&gt;</p>
+                        <p>&emsp;&emsp;&emsp;&emsp;&const url = `ws://${window.location.host}/ws/socket-server/`;</p>
+                        <p>&emsp;&emsp;&emsp;&emsp;&const chatSocket = new WebSocket(url);</p>
+                        <p>&emsp;&emsp;&emsp;&emsp;&chatSocket.onmessage = (event) => {</p>
+                        <p>&emsp;&emsp;&emsp;&emsp;&emsp;&const data = JSON.parse(event.data);</p>
+                        <p>&emsp;&emsp;&emsp;&emsp;&emsp;&console.log("Data: ", data)</p>
+                        <p>&emsp;&emsp;&emsp;&emsp;&emsp;&if (data.type === "chat") {</p>
+                        <p>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&const messages = document.getElementById("messages");</p>
+                        <p>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&const message = document.createElement("p");</p>
+                        <p>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&message.innerHTML = data.message;</p>
+                        <p>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&messages.appendChild(message);</p>
+                        <p>&emsp;&emsp;&emsp;&emsp;&emsp;}</p>
+                        <p>&emsp;&emsp;&emsp;&emsp;}</p>
+                        <p>&emsp;&emsp;&emsp;&emsp;const handleSubmit = (event) => {</p>
+                        <p>&emsp;&emsp;&emsp;&emsp;&emsp;event.preventDefault();</p>
+                        <p>&emsp;&emsp;&emsp;&emsp;&emsp;const input = document.getElementById("chat-input");</p>
+                        <p>&emsp;&emsp;&emsp;&emsp;&emsp;const message = input.value;</p>
+                        <p>&emsp;&emsp;&emsp;&emsp;&emsp;input.value = "";</p>
+                        <p>&emsp;&emsp;&emsp;&emsp;&emsp;chatSocket.send(JSON.stringify({</p>
+                        <p>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;"message": message</p>
+                        <p>&emsp;&emsp;&emsp;&emsp;&emsp;}))</p>
+                        <p>&emsp;&emsp;&emsp;&emsp;}</p>
+                        <p>&emsp;&emsp;&emsp;&lt;/script&gt;</p>
+                        <p>&emsp;&emsp;&lt;/body&gt;</p>
+                        <p>&emsp;&lt;/html&gt;</p>
+                    </div>
+                    <p>Now that the template, is ready. You will now need to send messages to all the users when a single user sends a message.</p>
+                    <p>To do that, simply add a CHANNELS_LAYERS property in your <i>settings.py</i> file like so:</p>
+                    <div class="codeheader">
+                        <p>chat/chat/settings.py</p>
+                    </div>
+                    <div class="code">
+                        <p>CHANNEL_LAYERS = {</p>
+                        <p>&emsp;"default": {</p>
+                        <p>&emsp;&emsp;"BACKEND": "channels.layers.InMemoryChannelLayer",</p>
+                        <p>&emsp;},</p>
+                        <p>}</p>
+                    </div>
+                    <p>Finally, in the <i>consumers.py</i> file, paste this code to handle the user messages</p>
+                    <div class="codeheader">
+                        <p>chat/chat_app/consumers.py</p>
+                    </div>
+                    <div class="code">
+                        <p>import json</p>
+                        <p>from asgiref.sync import async_to_sync</p>
+                        <p>from channels.generic.websocket import WebsocketConsumer</p><br>
+                        <p>class ChatConsumer(WebsocketConsumer):</p>
+                        <p>&emsp;def connect(self):</p>
+                        <p>&emsp;&emsp;self.room_group_name = "test"</p>
+                        <p>&emsp;&emsp;async_to_sync(self.channel_layer.group_add)(</p>
+                        <p>&emsp;&emsp;&emsp;self.room_group_name,</p>
+                        <p>&emsp;&emsp;&emsp;self.channel_name</p>
+                        <p>&emsp;&emsp;)</p>
+                        <p>&emsp;&emsp;self.accept()</p>
+                        <p>&emsp;&emsp;self.send(text_data=json.dumps({</p>
+                        <p>&emsp;&emsp;&emsp;'type': 'connection_established',</p>
+                        <p>&emsp;&emsp;&emsp;'message': 'Connected'</p>
+                        <p>&emsp;&emsp;}))</p><br>
+                        <p>&emsp;&emsp;def receive(self, text_data):</p>
+                        <p>&emsp;&emsp;&emsp;text_data_json = json.loads(text_data)</p>
+                        <p>&emsp;&emsp;&emsp;message = text_data_json["message"]</p>
+                        <p>&emsp;&emsp;&emsp;print("Message: ", message)</p>
+                        <p>&emsp;&emsp;&emsp;async_to_sync(self.channel_layer.group_send)(</p>
+                        <p>&emsp;&emsp;&emsp;&emsp;self.room_group_name,</p>
+                        <p>&emsp;&emsp;&emsp;&emsp;{</p>
+                        <p>&emsp;&emsp;&emsp;&emsp;&emsp;"type": "chat_message",</p>
+                        <p>&emsp;&emsp;&emsp;&emsp;&emsp;"message": message</p>
+                        <p>&emsp;&emsp;&emsp;&emsp;}</p>
+                        <p>&emsp;&emsp;&emsp;)</p><br>
+                        <p>&emsp;def chat_message(self, event):</p>
+                        <p>&emsp;&emsp;message = event["message"]</p>
+                        <p>&emsp;&emsp;self.send(text_data=json.dumps({</p>
+                        <p>&emsp;&emsp;&emsp;"type": "chat",</p>
+                        <p>&emsp;&emsp;&emsp;"message": message</p>
+                        <p>&emsp;&emsp;}))</p>
+                    </div>
+                    <p>This was the last bit of code that you had to write.</p>
+                    <p>If you open two pages with the server. You should now be able to communicate between the pages.</p>
+                    <p>Just send a message in the first page, and check if you received it on the second.</p>
+                </div>
+            </div>
+        </div>
+        <div class="author">
+            <div class="profile">
+                <p>Samuel BILLOT</p>
+                <p class="grey">samuel.billot@etu.univ-grenoble-alpes.fr</p>
+            </div>
+            <img src="assets/hamster-russe.jpg" alt="">
+        </div>  
+    <main>
+    <script src="app.js"></script>
+</body>
+</html>

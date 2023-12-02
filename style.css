@@ -1,0 +1,203 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
+@font-face {
+  font-family: "Django";
+  src: url("assets/dtl_prokyon_st_bold.ttf");
+}
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-family: "Roboto", sans-serif;
+  scroll-behavior: smooth;
+}
+
+h1, h2 {
+  font-family: "Django";
+}
+
+span.line {
+  width: 90%;
+  height: 2px;
+  background-color: silver;
+  display: block;
+}
+
+body {
+  background-color: #f8f8f8;
+  display: flex;
+}
+
+header {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 2rem;
+  gap: 0.5rem;
+}
+header h1 {
+  font-size: 38px;
+  font-family: "Roboto", sans-serif;
+}
+header img {
+  margin-top: 6px;
+  height: 76px;
+  border-radius: 12px;
+}
+
+aside {
+  position: relative;
+  width: 20vw;
+}
+aside nav {
+  width: 20vw;
+  height: 100vh;
+  position: fixed;
+  background-color: #ececec;
+  display: flex;
+  gap: 1rem;
+  flex-direction: column;
+  align-items: center;
+}
+aside nav h2 {
+  margin-top: 2rem;
+  font-size: 36px;
+  color: #103e2e;
+  font-weight: bold;
+}
+aside nav ul {
+  list-style: none;
+  width: 100%;
+}
+aside nav ul li {
+  transition: 0.2s;
+}
+aside nav ul li a {
+  display: inline-block;
+  color: #103e2e;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 24px;
+  width: 100%;
+  padding: 0.5rem;
+}
+aside nav ul li:hover {
+  background-color: #e2e2e2;
+}
+
+main {
+  width: 80vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+main div.time-estimated {
+  margin: 2rem 0;
+  display: flex;
+  gap: 0.25rem;
+  flex-direction: column;
+  align-items: flex-end;
+  width: 90%;
+}
+main div.time-estimated p {
+  font-size: 22px;
+}
+main div.steps {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+main div.steps div.step {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  padding: 0 2rem;
+}
+main div.steps div.step h2 {
+  font-size: 28px;
+  color: #103e2e;
+  margin-bottom: 1.5rem;
+}
+main div.steps div.step div.description {
+  display: flex;
+  flex-direction: column;
+  width: 90%;
+}
+main div.steps div.step div.description p {
+  font-size: 19px;
+  margin-left: 0.5rem;
+  margin-bottom: 0.15rem;
+}
+main div.steps div.step div.description p.command {
+  background-color: #e6e6e6;
+  border-radius: 5px;
+  padding: 0.75rem;
+  margin: 1.25rem 0 1.25rem 3rem;
+  font-weight: bold;
+  color: hsl(20, 40%, 40%);
+}
+main div.steps div.step div.description p.next-paragraph {
+  margin-top: 1.5rem;
+}
+main div.steps div.step div.description div.codeheader {
+  border-radius: 4px 4px 0 0;
+  background-color: #e6e6e6;
+  margin-top: 1rem;
+  padding: 0.25rem;
+  display: flex;
+  align-items: center;
+}
+main div.steps div.step div.description div.code {
+  background-color: #eee;
+  border-radius: 0 0 4px 4px;
+  padding: 1rem 0.5rem 1rem 2rem;
+  margin-bottom: 1.5rem;
+}
+main div.steps div.step div.description div.code p {
+  font-size: 15px;
+  font-family: "Courier New", Courier, monospace;
+}
+main div.steps div.step div.description div.image {
+  width: 100%;
+  padding: 1rem 5rem;
+}
+main div.steps div.step div.description div.image img {
+  border-radius: 10px;
+  width: 35%;
+}
+main div.steps span.line {
+  margin: 2rem 0 3rem 0;
+}
+main div.author {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 6rem 2rem 0;
+}
+main div.author img {
+  border-radius: 50%;
+  width: 70px;
+  height: 70px;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+main div.author div.profile {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+main div.author p {
+  font-size: 24px;
+}
+main div.author p.grey {
+  color: #999;
+  font-size: 19px;
+}/*# sourceMappingURL=style.css.map */
